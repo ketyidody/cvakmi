@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import LazyImage from '@/Components/Gallery/LazyImage.vue';
@@ -12,6 +12,7 @@ const props = defineProps({
 
 const showLightbox = ref(false);
 const currentPhotoIndex = ref(0);
+const showBackToTop = ref(false);
 
 const openLightbox = (index) => {
     currentPhotoIndex.value = index;
@@ -25,6 +26,25 @@ const closeLightbox = () => {
 const navigateToPhoto = (index) => {
     currentPhotoIndex.value = index;
 };
+
+const handleScroll = () => {
+    showBackToTop.value = window.scrollY > 300;
+};
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <template>
@@ -90,5 +110,26 @@ const navigateToPhoto = (index) => {
             @close="closeLightbox"
             @navigate="navigateToPhoto"
         />
+
+        <!-- Back to Top Button (Mobile Only) -->
+        <transition
+            enter-active-class="transition ease-out duration-200"
+            enter-from-class="opacity-0 translate-y-4"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition ease-in duration-150"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-4"
+        >
+            <button
+                v-if="showBackToTop"
+                @click="scrollToTop"
+                class="fixed bottom-6 right-6 z-40 bg-gray-900 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors"
+                aria-label="Back to top"
+            >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+            </button>
+        </transition>
     </PublicLayout>
 </template>

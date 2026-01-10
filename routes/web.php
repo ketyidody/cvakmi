@@ -87,6 +87,7 @@ Route::middleware('auth')->group(function () {
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('albums', AlbumController::class);
+    Route::post('photos/reorder', [PhotoController::class, 'reorder'])->name('photos.reorder');
     Route::resource('photos', PhotoController::class);
     Route::resource('pricing-types', PricingTypeController::class);
     Route::resource('services', ServiceController::class);

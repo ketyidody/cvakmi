@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import logoBlack from '../../images/logo-black.png';
+import logoWhite from '../../images/logo-white.png';
 
 const mobileMenuOpen = ref(false);
 </script>
@@ -9,13 +9,13 @@ const mobileMenuOpen = ref(false);
 <template>
     <div class="min-h-screen bg-white text-gray-900">
         <!-- Navigation -->
-        <nav class="py-6 px-4 sm:px-6 lg:px-8">
+        <nav class="py-6 px-4 sm:px-6 lg:px-8" style="background-color: rgba(0, 0, 0, 0.8);">
             <div class="max-w-7xl mx-auto">
                 <div class="flex justify-between items-center">
                     <!-- Logo / Brand -->
                     <div class="flex-shrink-0">
                         <Link :href="route('homepage')" class="hover:opacity-75 transition-opacity">
-                            <img :src="logoBlack" alt="Cvakmi" class="h-8 md:h-5 w-auto" />
+                            <img :src="logoWhite" alt="Cvakmi" class="h-8 md:h-5 w-auto" />
                         </Link>
                     </div>
 
@@ -23,15 +23,13 @@ const mobileMenuOpen = ref(false);
                     <div class="hidden md:flex space-x-8">
                         <Link
                             :href="route('gallery.index')"
-                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"
-                            :class="{ 'text-gray-900': $page.url.startsWith('/gallery'), 'text-gray-500': !$page.url.startsWith('/gallery') }"
+                            class="text-sm font-light tracking-wider hover:text-gray-300 transition-colors uppercase text-white"
                         >
                             Portfólio
                         </Link>
                         <Link
                             :href="route('about')"
-                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"
-                            :class="{ 'text-gray-900': route().current('about'), 'text-gray-500': !route().current('about') }"
+                            class="text-sm font-light tracking-wider hover:text-gray-300 transition-colors uppercase text-white"
                         >
                             O mne
                         </Link>
@@ -63,7 +61,7 @@ const mobileMenuOpen = ref(false);
                         <button
                             type="button"
                             @click="mobileMenuOpen = !mobileMenuOpen"
-                            class="text-gray-600 hover:text-black focus:outline-none"
+                            class="text-white hover:text-gray-300 focus:outline-none"
                             aria-label="Toggle menu"
                         >
                             <svg v-if="!mobileMenuOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,20 +76,18 @@ const mobileMenuOpen = ref(false);
             </div>
 
             <!-- Mobile Navigation -->
-            <div v-if="mobileMenuOpen" class="md:hidden mt-4 pt-4 border-t border-gray-200">
+            <div v-if="mobileMenuOpen" class="md:hidden mt-4 pt-4 border-t border-gray-600">
                 <div class="space-y-3">
                     <Link
                         :href="route('gallery.index')"
-                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"
-                        :class="{ 'text-gray-900': $page.url.startsWith('/gallery'), 'text-gray-500': !$page.url.startsWith('/gallery') }"
+                        class="block text-sm font-light tracking-wider hover:text-gray-300 transition-colors uppercase text-white"
                         @click="mobileMenuOpen = false"
                     >
                         Portfólio
                     </Link>
                     <Link
                         :href="route('about')"
-                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"
-                        :class="{ 'text-gray-900': route().current('about'), 'text-gray-500': !route().current('about') }"
+                        class="block text-sm font-light tracking-wider hover:text-gray-300 transition-colors uppercase text-white"
                         @click="mobileMenuOpen = false"
                     >
                         O mne

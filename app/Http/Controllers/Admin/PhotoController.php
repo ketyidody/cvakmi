@@ -23,9 +23,15 @@ class PhotoController extends Controller
             $query->where('album_id', $request->album_id);
         }
 
-        $photos = $query->orderBy('display_order')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $query->orderBy('display_order')
+            ->orderBy('created_at', 'desc');
+
+        // If 'all' parameter is present, return all photos (for sorting mode)
+        if ($request->has('all') && $request->all == 1) {
+            $photos = $query->get();
+        } else {
+            $photos = $query->paginate(20);
+        }
 
         $albums = Album::orderBy('title')->get();
 
@@ -230,5 +236,39 @@ class PhotoController extends Controller
 
         return redirect()->route('admin.photos.index')
             ->with('success', 'Photo deleted successfully.');
+    }
+
+    /**
+     * Reorder photos within an album.
+     */
+    public function reorder(Request $request)
+    {
+        $validated = $request->validate([
+            'album_id' => 'required|exists:albums,id',
+            'photo_order' => 'required|array',
+            'photo_order.*' => 'required|exists:photos,id',
+        ]);
+
+        // Verify all photos belong to the specified album
+        $photoIds = $validated['photo_order'];
+        $photosCount = Photo::where('album_id', $validated['album_id'])
+            ->whereIn('id', $photoIds)
+            ->count();
+
+        if ($photosCount !== count($photoIds)) {
+            return back()->withErrors([
+                'photo_order' => 'Some photos do not belong to this album.'
+            ]);
+        }
+
+        // Update display_order for each photo (1-based index)
+        foreach ($photoIds as $index => $photoId) {
+            Photo::where('id', $photoId)
+                ->update(['display_order' => $index + 1]);
+        }
+
+        return redirect()
+            ->route('admin.photos.index', ['album_id' => $validated['album_id']])
+            ->with('success', 'Photo order updated successfully.');
     }
 }
