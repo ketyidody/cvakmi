@@ -17,4 +17,17 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        // Reduce memory usage during build
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['vue', '@inertiajs/vue3'],
+                },
+            },
+        },
+        // Reduce minification complexity
+        minify: 'esbuild',
+    },
 });
