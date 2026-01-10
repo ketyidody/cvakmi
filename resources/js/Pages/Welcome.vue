@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import LazyImage from '@/Components/Gallery/LazyImage.vue';
+import logoBlack from '../../images/logo-black.png';
 
 defineProps({
     featuredPhotos: Array,
@@ -15,30 +16,12 @@ defineProps({
     <Head title="Home" />
 
     <PublicLayout>
-        <!-- Admin Login Link (subtle, top right) -->
-        <div v-if="canLogin" class="fixed top-6 right-6 z-10">
-            <Link
-                v-if="$page.props.auth.user"
-                :href="route('dashboard')"
-                class="text-xs text-gray-400 hover:text-gray-900 transition-colors tracking-wider"
-            >
-                Admin
-            </Link>
-            <Link
-                v-else
-                :href="route('login')"
-                class="text-xs text-gray-400 hover:text-gray-900 transition-colors tracking-wider"
-            >
-                Login
-            </Link>
-        </div>
-
         <!-- Hero Section -->
         <div class="px-4 sm:px-6 lg:px-8 py-20 md:py-32">
             <div class="max-w-7xl mx-auto text-center">
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-light tracking-wide mb-6 text-gray-900">
-                    CVAKMI.SK
-                </h1>
+                <div class="mb-6 flex justify-center">
+                    <img :src="logoBlack" alt="Cvakmi" class="h-24 md:h-32 lg:h-40 w-auto" />
+                </div>
                 <p class="text-lg md:text-xl text-gray-600 font-light tracking-wide max-w-2xl mx-auto">
                     Fotografia • Portfolio
                 </p>

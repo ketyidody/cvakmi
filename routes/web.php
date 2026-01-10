@@ -38,41 +38,41 @@ Route::get('/o-mne', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/recenzie', function () {
-    $reviews = \App\Models\Review::where('is_active', true)
-        ->orderBy('display_order')
-        ->orderBy('review_date', 'desc')
-        ->get();
-
-    return Inertia::render('Reviews', [
-        'reviews' => $reviews,
-    ]);
-})->name('reviews');
-
-Route::get('/cennik', function () {
-    $pricingTypes = \App\Models\PricingType::where('is_active', true)
-        ->with(['packages' => function ($query) {
-            $query->where('is_active', true)
-                ->with('services')
-                ->orderBy('display_order')
-                ->orderBy('price');
-        }])
-        ->orderBy('display_order')
-        ->get();
-
-    $services = \App\Models\Service::where('is_active', true)
-        ->whereDoesntHave('packages')
-        ->get();
-
-    return Inertia::render('Pricing', [
-        'pricingTypes' => $pricingTypes,
-        'additionalServices' => $services,
-    ]);
-})->name('pricing');
-
-Route::get('/kontakt', function () {
-    return Inertia::render('Contact');
-})->name('contact');
+//Route::get('/recenzie', function () {
+//    $reviews = \App\Models\Review::where('is_active', true)
+//        ->orderBy('display_order')
+//        ->orderBy('review_date', 'desc')
+//        ->get();
+//
+//    return Inertia::render('Reviews', [
+//        'reviews' => $reviews,
+//    ]);
+//})->name('reviews');
+//
+//Route::get('/cennik', function () {
+//    $pricingTypes = \App\Models\PricingType::where('is_active', true)
+//        ->with(['packages' => function ($query) {
+//            $query->where('is_active', true)
+//                ->with('services')
+//                ->orderBy('display_order')
+//                ->orderBy('price');
+//        }])
+//        ->orderBy('display_order')
+//        ->get();
+//
+//    $services = \App\Models\Service::where('is_active', true)
+//        ->whereDoesntHave('packages')
+//        ->get();
+//
+//    return Inertia::render('Pricing', [
+//        'pricingTypes' => $pricingTypes,
+//        'additionalServices' => $services,
+//    ]);
+//})->name('pricing');
+//
+//Route::get('/kontakt', function () {
+//    return Inertia::render('Contact');
+//})->name('contact');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

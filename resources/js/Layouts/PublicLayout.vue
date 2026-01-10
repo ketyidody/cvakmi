@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import logoBlack from '../../images/logo-black.png';
 
 const mobileMenuOpen = ref(false);
 </script>
@@ -13,8 +14,8 @@ const mobileMenuOpen = ref(false);
                 <div class="flex justify-between items-center">
                     <!-- Logo / Brand -->
                     <div class="flex-shrink-0">
-                        <Link :href="route('homepage')" class="text-lg md:text-xl font-light tracking-wider hover:text-gray-600 transition-colors">
-                            CVAKMI.SK
+                        <Link :href="route('homepage')" class="hover:opacity-75 transition-opacity">
+                            <img :src="logoBlack" alt="Cvakmi" class="h-8 md:h-5 w-auto" />
                         </Link>
                     </div>
 
@@ -34,27 +35,27 @@ const mobileMenuOpen = ref(false);
                         >
                             O mne
                         </Link>
-                        <Link
-                            :href="route('reviews')"
-                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"
-                            :class="{ 'text-gray-900': route().current('reviews'), 'text-gray-500': !route().current('reviews') }"
-                        >
-                            Recenzie
-                        </Link>
-                        <Link
-                            :href="route('pricing')"
-                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"
-                            :class="{ 'text-gray-900': route().current('pricing'), 'text-gray-500': !route().current('pricing') }"
-                        >
-                            Cenník
-                        </Link>
-                        <Link
-                            :href="route('contact')"
-                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"
-                            :class="{ 'text-gray-900': route().current('contact'), 'text-gray-500': !route().current('contact') }"
-                        >
-                            Kontakt
-                        </Link>
+<!--                        <Link-->
+<!--                            :href="route('reviews')"-->
+<!--                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"-->
+<!--                            :class="{ 'text-gray-900': route().current('reviews'), 'text-gray-500': !route().current('reviews') }"-->
+<!--                        >-->
+<!--                            Recenzie-->
+<!--                        </Link>-->
+<!--                        <Link-->
+<!--                            :href="route('pricing')"-->
+<!--                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"-->
+<!--                            :class="{ 'text-gray-900': route().current('pricing'), 'text-gray-500': !route().current('pricing') }"-->
+<!--                        >-->
+<!--                            Cenník-->
+<!--                        </Link>-->
+<!--                        <Link-->
+<!--                            :href="route('contact')"-->
+<!--                            class="text-sm font-light tracking-wider hover:text-gray-600 transition-colors uppercase"-->
+<!--                            :class="{ 'text-gray-900': route().current('contact'), 'text-gray-500': !route().current('contact') }"-->
+<!--                        >-->
+<!--                            Kontakt-->
+<!--                        </Link>-->
                     </div>
 
                     <!-- Mobile menu button -->
@@ -95,30 +96,30 @@ const mobileMenuOpen = ref(false);
                     >
                         O mne
                     </Link>
-                    <Link
-                        :href="route('reviews')"
-                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"
-                        :class="{ 'text-gray-900': route().current('reviews'), 'text-gray-500': !route().current('reviews') }"
-                        @click="mobileMenuOpen = false"
-                    >
-                        Recenzie
-                    </Link>
-                    <Link
-                        :href="route('pricing')"
-                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"
-                        :class="{ 'text-gray-900': route().current('pricing'), 'text-gray-500': !route().current('pricing') }"
-                        @click="mobileMenuOpen = false"
-                    >
-                        Cenník
-                    </Link>
-                    <Link
-                        :href="route('contact')"
-                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"
-                        :class="{ 'text-gray-900': route().current('contact'), 'text-gray-500': !route().current('contact') }"
-                        @click="mobileMenuOpen = false"
-                    >
-                        Kontakt
-                    </Link>
+<!--                    <Link-->
+<!--                        :href="route('reviews')"-->
+<!--                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"-->
+<!--                        :class="{ 'text-gray-900': route().current('reviews'), 'text-gray-500': !route().current('reviews') }"-->
+<!--                        @click="mobileMenuOpen = false"-->
+<!--                    >-->
+<!--                        Recenzie-->
+<!--                    </Link>-->
+<!--                    <Link-->
+<!--                        :href="route('pricing')"-->
+<!--                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"-->
+<!--                        :class="{ 'text-gray-900': route().current('pricing'), 'text-gray-500': !route().current('pricing') }"-->
+<!--                        @click="mobileMenuOpen = false"-->
+<!--                    >-->
+<!--                        Cenník-->
+<!--                    </Link>-->
+<!--                    <Link-->
+<!--                        :href="route('contact')"-->
+<!--                        class="block text-sm font-light tracking-wider hover:text-gray-900 transition-colors uppercase"-->
+<!--                        :class="{ 'text-gray-900': route().current('contact'), 'text-gray-500': !route().current('contact') }"-->
+<!--                        @click="mobileMenuOpen = false"-->
+<!--                    >-->
+<!--                        Kontakt-->
+<!--                    </Link>-->
                 </div>
             </div>
         </nav>
