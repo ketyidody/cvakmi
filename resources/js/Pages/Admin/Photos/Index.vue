@@ -175,7 +175,7 @@ const saveOrder = () => {
                                 v-if="isSortMode"
                                 v-model="localPhotos"
                                 item-key="id"
-                                class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                                 :animation="200"
                                 handle=".drag-handle"
                                 ghost-class="opacity-50"
@@ -189,18 +189,18 @@ const saveOrder = () => {
                                             </svg>
                                         </div>
 
-                                        <div class="aspect-square bg-gray-200">
+                                        <div class="bg-gray-200">
                                             <img
                                                 v-if="photo.thumbnail_path"
                                                 :src="`/storage/${photo.thumbnail_path}`"
                                                 :alt="photo.title"
-                                                class="w-full h-full object-cover"
+                                                class="w-full h-auto"
                                             >
                                             <img
                                                 v-else
                                                 :src="`/storage/${photo.image_path}`"
                                                 :alt="photo.title"
-                                                class="w-full h-full object-cover"
+                                                class="w-full h-auto"
                                             >
                                         </div>
 
@@ -212,21 +212,21 @@ const saveOrder = () => {
                                 </template>
                             </draggable>
 
-                            <!-- Browse Mode Grid (existing structure) -->
-                            <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <!-- Browse Mode Grid -->
+                            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div v-for="photo in photosArray" :key="photo.id" class="group relative border rounded-lg overflow-hidden hover:shadow-lg transition">
-                                    <div class="aspect-square bg-gray-200">
+                                    <div class="bg-gray-200">
                                         <img
                                             v-if="photo.thumbnail_path"
                                             :src="`/storage/${photo.thumbnail_path}`"
                                             :alt="photo.title"
-                                            class="w-full h-full object-cover"
+                                            class="w-full h-auto"
                                         >
                                         <img
                                             v-else
                                             :src="`/storage/${photo.image_path}`"
                                             :alt="photo.title"
-                                            class="w-full h-full object-cover"
+                                            class="w-full h-auto"
                                         >
                                     </div>
 

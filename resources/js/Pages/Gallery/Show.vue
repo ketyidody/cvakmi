@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import LazyImage from '@/Components/Gallery/LazyImage.vue';
 import Lightbox from '@/Components/Gallery/Lightbox.vue';
+import ImagesGrid from 'vue-images-grid';
+import 'vue-images-grid/dist/style.css';
 
 const props = defineProps({
     album: Object,
@@ -13,6 +15,31 @@ const props = defineProps({
 const showLightbox = ref(false);
 const currentPhotoIndex = ref(0);
 const showBackToTop = ref(false);
+const windowWidth = ref(window.innerWidth);
+
+// Prepare images for vue-images-grid
+const gridImages = computed(() => {
+    return props.photos.map((photo, index) => ({
+        id: index,
+        src: photo.medium_path ? `/storage/${photo.medium_path}` : `/storage/${photo.image_path}`,
+    }));
+});
+
+const cols = computed(() => {
+    if (windowWidth.value < 768) {
+        return 1; // Mobile: 1 column
+    } else if (windowWidth.value < 1024) {
+        return 2; // Tablet: 2 columns
+    } else {
+        return 3; // Desktop: 3 columns
+    }
+});
+
+const handleImageClick = (imageData) => {
+    // The event passes the image object with the id (which is our index)
+    currentPhotoIndex.value = imageData.id;
+    showLightbox.value = true;
+};
 
 const openLightbox = (index) => {
     currentPhotoIndex.value = index;
@@ -31,6 +58,10 @@ const handleScroll = () => {
     showBackToTop.value = window.scrollY > 300;
 };
 
+const handleResize = () => {
+    windowWidth.value = window.innerWidth;
+};
+
 const scrollToTop = () => {
     window.scrollTo({
         top: 0,
@@ -40,10 +71,12 @@ const scrollToTop = () => {
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
 });
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', handleResize);
 });
 </script>
 
@@ -82,22 +115,14 @@ onUnmounted(() => {
                     <h3 class="text-xl font-light text-gray-700 uppercase">V tomto albume zatiaľ nie sú žiadne fotografie</h3>
                 </div>
 
-                <!-- Masonry Layout -->
-                <div v-else class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-                    <div
-                        v-for="(photo, index) in photos"
-                        :key="photo.id"
-                        @click="openLightbox(index)"
-                        class="group cursor-pointer break-inside-avoid"
-                    >
-                        <div class="relative overflow-hidden bg-gray-100">
-                            <LazyImage
-                                :src="photo.medium_path ? `/storage/${photo.medium_path}` : `/storage/${photo.image_path}`"
-                                :alt="photo.title"
-                                class-name="w-full h-auto transition-all duration-700 group-hover:scale-105 group-hover:opacity-90"
-                            />
-                        </div>
-                    </div>
+                <!-- Masonry Grid Layout -->
+                <div v-else class="masonry-grid">
+                    <ImagesGrid
+                        :images="gridImages"
+                        :cols="cols"
+                        :image-style="{ marginBottom: '24px', cursor: 'pointer' }"
+                        @onImageClick="handleImageClick"
+                    />
                 </div>
             </div>
         </div>
@@ -133,3 +158,18 @@ onUnmounted(() => {
         </transition>
     </PublicLayout>
 </template>
+
+<style scoped>
+.masonry-grid :deep(div) {
+    overflow: hidden;
+}
+
+.masonry-grid :deep(img) {
+    transition: transform 0.7s ease, opacity 0.7s ease;
+}
+
+.masonry-grid :deep(img:hover) {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+</style>
