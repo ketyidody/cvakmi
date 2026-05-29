@@ -17,6 +17,14 @@ export default defineConfig({
             },
         }),
     ],
+    server: {
+        // Listen on all interfaces so the dev server is reachable from outside
+        // the Docker container; harmless when running natively.
+        host: '0.0.0.0',
+        hmr: {
+            host: 'localhost',
+        },
+    },
     build: {
         // Reduce memory usage during build
         chunkSizeWarningLimit: 1000,

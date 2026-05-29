@@ -33,7 +33,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Admins land in the admin shell; parents go straight into the order wizard.
+        $home = $request->user()?->is_admin
+            ? route('dashboard', absolute: false)
+            : route('order.start', absolute: false);
+
+        return redirect()->intended($home);
     }
 
     /**
