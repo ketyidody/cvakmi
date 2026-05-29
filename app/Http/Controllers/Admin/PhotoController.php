@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Album;
 use App\Models\Photo;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 use Intervention\Image\Laravel\Facades\Image;
 
 class PhotoController extends Controller
@@ -74,7 +74,7 @@ class PhotoController extends Controller
 
         foreach ($request->file('images') as $index => $image) {
             // Generate unique filename
-            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            $filename = uniqid().'.'.$image->getClientOriginalExtension();
 
             // Store original image
             $originalPath = $image->store('photos/original', 'public');
@@ -85,19 +85,19 @@ class PhotoController extends Controller
             // Generate medium size (max 1200px wide, maintain aspect ratio)
             $mediumImage = Image::read($image->getRealPath());
             $mediumImage->scaleDown(width: 1200);
-            $mediumPath = 'photos/medium/' . $filename;
+            $mediumPath = 'photos/medium/'.$filename;
             Storage::disk('public')->put($mediumPath, $mediumImage->encode());
 
             // Generate thumbnail (max 400px wide, maintain aspect ratio)
             $thumbnail = Image::read($image->getRealPath());
             $thumbnail->scaleDown(width: 400);
-            $thumbnailPath = 'photos/thumbnails/' . $filename;
+            $thumbnailPath = 'photos/thumbnails/'.$filename;
             Storage::disk('public')->put($thumbnailPath, $thumbnail->encode());
 
             // Generate title from filename if no base title provided
             $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
             $photoTitle = $validated['title']
-                ? $validated['title'] . ' - ' . $originalName
+                ? $validated['title'].' - '.$originalName
                 : $originalName;
 
             // Create photo record
@@ -180,7 +180,7 @@ class PhotoController extends Controller
             $image = $request->file('image');
 
             // Generate unique filename
-            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            $filename = uniqid().'.'.$image->getClientOriginalExtension();
 
             // Store original image
             $originalPath = $image->store('photos/original', 'public');
@@ -197,14 +197,14 @@ class PhotoController extends Controller
             // Generate medium size (max 1200px wide, maintain aspect ratio)
             $mediumImage = Image::read($image->getRealPath());
             $mediumImage->scaleDown(width: 1200);
-            $mediumPath = 'photos/medium/' . $filename;
+            $mediumPath = 'photos/medium/'.$filename;
             Storage::disk('public')->put($mediumPath, $mediumImage->encode());
             $validated['medium_path'] = $mediumPath;
 
             // Generate thumbnail (max 400px wide, maintain aspect ratio)
             $thumbnail = Image::read($image->getRealPath());
             $thumbnail->scaleDown(width: 400);
-            $thumbnailPath = 'photos/thumbnails/' . $filename;
+            $thumbnailPath = 'photos/thumbnails/'.$filename;
             Storage::disk('public')->put($thumbnailPath, $thumbnail->encode());
             $validated['thumbnail_path'] = $thumbnailPath;
         }
@@ -257,7 +257,7 @@ class PhotoController extends Controller
 
         if ($photosCount !== count($photoIds)) {
             return back()->withErrors([
-                'photo_order' => 'Some photos do not belong to this album.'
+                'photo_order' => 'Some photos do not belong to this album.',
             ]);
         }
 

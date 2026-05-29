@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use App\Models\Photo;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GalleryController extends Controller

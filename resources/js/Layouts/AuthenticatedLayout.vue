@@ -77,6 +77,36 @@ const showingNavigationDropdown = ref(false);
                                     >
                                         Reviews
                                     </NavLink>
+                                    <NavLink
+                                        :href="route('admin.classrooms.index')"
+                                        :active="route().current('admin.classrooms.*')"
+                                    >
+                                        Classrooms
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('admin.classroom-photos.index')"
+                                        :active="route().current('admin.classroom-photos.*')"
+                                    >
+                                        Class Photos
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('admin.print-options.index')"
+                                        :active="route().current('admin.print-options.*')"
+                                    >
+                                        Print Options
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('admin.packages.index')"
+                                        :active="route().current('admin.packages.*')"
+                                    >
+                                        Packages
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('admin.orders.index')"
+                                        :active="route().current('admin.orders.*')"
+                                    >
+                                        Orders
+                                    </NavLink>
                                 </template>
                             </div>
                         </div>
@@ -222,6 +252,36 @@ const showingNavigationDropdown = ref(false);
                                 :active="route().current('admin.reviews.*')"
                             >
                                 Reviews
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.classrooms.index')"
+                                :active="route().current('admin.classrooms.*')"
+                            >
+                                Classrooms
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.classroom-photos.index')"
+                                :active="route().current('admin.classroom-photos.*')"
+                            >
+                                Class Photos
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.print-options.index')"
+                                :active="route().current('admin.print-options.*')"
+                            >
+                                Print Options
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.packages.index')"
+                                :active="route().current('admin.packages.*')"
+                            >
+                                Packages
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.orders.index')"
+                                :active="route().current('admin.orders.*')"
+                            >
+                                Orders
                             </ResponsiveNavLink>
                         </template>
                     </div>

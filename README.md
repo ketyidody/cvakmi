@@ -51,7 +51,7 @@ A clean and minimal photographer portfolio website built with Laravel 12, Inerti
 
 ```bash
 git clone <repository-url>
-cd ketyi.com_2026
+cd cvakmi
 ```
 
 ### 2. Install PHP Dependencies

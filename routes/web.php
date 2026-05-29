@@ -1,13 +1,22 @@
 <?php
 
 use App\Http\Controllers\Admin\AlbumController;
+use App\Http\Controllers\Admin\ClassroomController;
+use App\Http\Controllers\Admin\ClassroomPhotoController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\PricingPackageController;
 use App\Http\Controllers\Admin\PricingTypeController;
+use App\Http\Controllers\Admin\PrintOptionController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderGalleryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WizardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,7 +38,7 @@ Route::get('/', function () {
         'featuredPhotos' => $featuredPhotos,
         'albums' => $albums,
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+        'canRegister' => false, // Registration is invite-only via the order link
     ]);
 })->name('homepage');
 
@@ -75,6 +84,11 @@ Route::get('/o-mne', function () {
 //})->name('contact');
 
 Route::get('/dashboard', function () {
+    // Parents don't use the admin dashboard — send them into the wizard.
+    if (! auth()->user()?->is_admin) {
+        return redirect()->route('order.start');
+    }
+
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -93,6 +107,43 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('services', ServiceController::class);
     Route::resource('pricing-packages', PricingPackageController::class);
     Route::resource('reviews', ReviewController::class);
+
+    // Photo order system
+    Route::resource('classrooms', ClassroomController::class)->except('show');
+    Route::post('classroom-photos/reorder', [ClassroomPhotoController::class, 'reorder'])
+        ->name('classroom-photos.reorder');
+    Route::resource('classroom-photos', ClassroomPhotoController::class)
+        ->parameters(['classroom-photos' => 'classroomPhoto'])
+        ->except('show');
+    Route::resource('print-options', PrintOptionController::class)
+        ->parameters(['print-options' => 'printOption'])
+        ->except('show');
+    Route::resource('packages', PackageController::class)->except('show');
+    Route::resource('orders', AdminOrderController::class)
+        ->only(['index', 'show', 'update', 'destroy']);
+});
+
+// Parent-facing wizard. One order can span multiple classrooms; one package
+// covers the whole order. /objednavka dispatches to the right step.
+Route::middleware('auth')->prefix('objednavka')->name('order.')->group(function () {
+    Route::get('/', [WizardController::class, 'start'])->name('start');
+
+    Route::get('/balik', [WizardController::class, 'package'])->name('package');
+    Route::post('/balik', [WizardController::class, 'savePackages'])->name('package.save');
+
+    Route::get('/fotky/{classroom}', [WizardController::class, 'photos'])->name('photos');
+
+    Route::get('/sumar', [WizardController::class, 'summary'])->name('summary');
+    Route::post('/odoslat', [WizardController::class, 'submit'])->name('submit');
+
+    Route::get('/foto/{classroomPhoto}/{size?}', [OrderGalleryController::class, 'photo'])->name('photo');
+
+    Route::post('/kosik/polozka', [CartController::class, 'addItem'])->name('cart.add');
+    Route::patch('/kosik/{item}', [CartController::class, 'updateItem'])->name('cart.update');
+    Route::delete('/kosik/{item}', [CartController::class, 'removeItem'])->name('cart.remove');
+
+    Route::get('/objednavky', [OrderController::class, 'index'])->name('history');
+    Route::get('/objednavky/{order}', [OrderController::class, 'show'])->name('show');
 });
 
 // Public gallery routes

@@ -6,11 +6,24 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+const props = defineProps({
+    classrooms: {
+        type: Array,
+        default: () => [],
+    },
+    invite: {
+        type: String,
+        default: null,
+    },
+});
+
 const form = useForm({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    classrooms: [],
+    invite: props.invite,
 });
 
 const submit = () => {
@@ -90,6 +103,32 @@ const submit = () => {
                     class="mt-2"
                     :message="form.errors.password_confirmation"
                 />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel value="Trieda(y) Vášho dieťaťa" />
+
+                <p v-if="classrooms.length === 0" class="mt-1 text-sm text-gray-500">
+                    Momentálne nie sú k dispozícii žiadne triedy.
+                </p>
+
+                <div v-else class="mt-2 space-y-2">
+                    <label
+                        v-for="classroom in classrooms"
+                        :key="classroom.id"
+                        class="flex items-center"
+                    >
+                        <input
+                            type="checkbox"
+                            :value="classroom.id"
+                            v-model="form.classrooms"
+                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                        />
+                        <span class="ml-2 text-sm text-gray-700">{{ classroom.name }}</span>
+                    </label>
+                </div>
+
+                <InputError class="mt-2" :message="form.errors.classrooms" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
