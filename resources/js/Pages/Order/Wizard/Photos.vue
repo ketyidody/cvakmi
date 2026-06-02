@@ -143,11 +143,12 @@ const backLabel = computed(() =>
             <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div v-for="(photo, idx) in photos" :key="photo.id"
                     class="bg-white shadow-sm rounded-lg overflow-hidden flex flex-col">
-                    <button type="button" @click="openLightbox(idx)"
-                        class="relative block w-full bg-white cursor-zoom-in group focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="button" @click="openLightbox(idx)" @contextmenu.prevent
+                        class="relative block w-full bg-white cursor-zoom-in group focus:outline-none focus:ring-2 focus:ring-blue-500 select-none">
                         <div class="aspect-[4/3] flex items-center justify-center overflow-hidden py-3">
                             <img :src="photo.thumbnail_url" :alt="photo.title" loading="lazy"
-                                class="max-w-full max-h-full object-contain" />
+                                draggable="false" @dragstart.prevent
+                                class="max-w-full max-h-full object-contain pointer-events-none select-none" />
                         </div>
                         <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30 text-white pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10">
@@ -218,8 +219,9 @@ const backLabel = computed(() =>
 
         <!-- Lightbox -->
         <div v-if="lightboxPhoto"
-            class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4"
-            @click.self="closeLightbox">
+            class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4 select-none"
+            @click.self="closeLightbox"
+            @contextmenu.prevent>
             <button type="button" @click="closeLightbox" aria-label="Zavrieť"
                 class="absolute top-4 right-4 text-white text-2xl leading-none bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center">×</button>
             <button v-if="photos.length > 1" type="button" @click="prevPhoto" aria-label="Predošlá"
@@ -227,7 +229,8 @@ const backLabel = computed(() =>
             <button v-if="photos.length > 1" type="button" @click="nextPhoto" aria-label="Ďalšia"
                 class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-white text-3xl leading-none bg-white/10 hover:bg-white/20 rounded-full w-12 h-12 flex items-center justify-center">›</button>
             <img :src="lightboxPhoto.medium_url" :alt="lightboxPhoto.title"
-                class="max-h-[85vh] max-w-full rounded shadow-2xl object-contain" />
+                draggable="false" @dragstart.prevent @contextmenu.prevent
+                class="max-h-[85vh] max-w-full rounded shadow-2xl object-contain pointer-events-none select-none" />
             <p class="text-white text-sm mt-3">
                 {{ lightboxPhoto.title }}
                 <span class="text-white/60 ml-2">{{ lightboxIndex + 1 }} / {{ photos.length }}</span>

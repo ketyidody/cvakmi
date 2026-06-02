@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Setting extends Model
+{
+    protected $fillable = [
+        'full_name',
+        'address',
+        'email',
+        'iban',
+        'watermark_text',
+    ];
+
+    public static function current(): self
+    {
+        return static::firstOrCreate([]);
+    }
+}

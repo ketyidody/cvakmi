@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -77,6 +78,9 @@ class OrderController extends Controller
         // Total of all per-classroom packages that produced items.
         $packagesTotal = (float) $groups->sum('package_price');
 
+        $settings = Setting::current();
+        $iban = preg_replace('/\s+/', '', (string) $settings->iban);
+
         return Inertia::render('Order/Show', [
             'order' => [
                 'id' => $order->id,
@@ -87,6 +91,15 @@ class OrderController extends Controller
                 'packages_total' => $packagesTotal,
                 'submitted_at' => $order->submitted_at,
                 'groups' => $groups,
+            ],
+            'payment' => $iban === '' ? null : [
+                'iban' => $iban,
+                'beneficiary_name' => $settings->full_name,
+                'beneficiary_address' => $settings->address,
+                'beneficiary_email' => $settings->email,
+                'amount' => (float) $order->total_estimate,
+                'currency' => 'EUR',
+                'variable_symbol' => (string) ($order->order_number ?: $order->id),
             ],
         ]);
     }

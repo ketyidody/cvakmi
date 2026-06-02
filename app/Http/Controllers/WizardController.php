@@ -349,7 +349,7 @@ class WizardController extends Controller
 
             $cart->update([
                 'status' => Order::STATUS_PENDING,
-                'order_number' => Order::generateOrderNumber(),
+                'order_number' => $cart->makeOrderNumber(),
                 'note' => $validated['note'] ?? null,
                 'submitted_at' => now(),
             ]);

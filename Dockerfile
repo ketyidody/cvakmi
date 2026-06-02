@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg-dev \
         libfreetype-dev \
         libonig-dev \
+        fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP extensions:
