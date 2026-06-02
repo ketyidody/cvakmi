@@ -54,30 +54,6 @@ const showingNavigationDropdown = ref(false);
                                         Photos
                                     </NavLink>
                                     <NavLink
-                                        :href="route('admin.pricing-types.index')"
-                                        :active="route().current('admin.pricing-types.*')"
-                                    >
-                                        Pricing Types
-                                    </NavLink>
-                                    <NavLink
-                                        :href="route('admin.services.index')"
-                                        :active="route().current('admin.services.*')"
-                                    >
-                                        Services
-                                    </NavLink>
-                                    <NavLink
-                                        :href="route('admin.pricing-packages.index')"
-                                        :active="route().current('admin.pricing-packages.*')"
-                                    >
-                                        Packages
-                                    </NavLink>
-                                    <NavLink
-                                        :href="route('admin.reviews.index')"
-                                        :active="route().current('admin.reviews.*')"
-                                    >
-                                        Reviews
-                                    </NavLink>
-                                    <NavLink
                                         :href="route('admin.classrooms.index')"
                                         :active="route().current('admin.classrooms.*')"
                                     >
@@ -106,6 +82,12 @@ const showingNavigationDropdown = ref(false);
                                         :active="route().current('admin.orders.*')"
                                     >
                                         Orders
+                                    </NavLink>
+                                    <NavLink
+                                        :href="route('admin.settings.edit')"
+                                        :active="route().current('admin.settings.*')"
+                                    >
+                                        Settings
                                     </NavLink>
                                 </template>
                             </div>
@@ -230,30 +212,6 @@ const showingNavigationDropdown = ref(false);
                                 Photos
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
-                                :href="route('admin.pricing-types.index')"
-                                :active="route().current('admin.pricing-types.*')"
-                            >
-                                Pricing Types
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('admin.services.index')"
-                                :active="route().current('admin.services.*')"
-                            >
-                                Services
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('admin.pricing-packages.index')"
-                                :active="route().current('admin.pricing-packages.*')"
-                            >
-                                Packages
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('admin.reviews.index')"
-                                :active="route().current('admin.reviews.*')"
-                            >
-                                Reviews
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
                                 :href="route('admin.classrooms.index')"
                                 :active="route().current('admin.classrooms.*')"
                             >
@@ -282,6 +240,12 @@ const showingNavigationDropdown = ref(false);
                                 :active="route().current('admin.orders.*')"
                             >
                                 Orders
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('admin.settings.edit')"
+                                :active="route().current('admin.settings.*')"
+                            >
+                                Settings
                             </ResponsiveNavLink>
                         </template>
                     </div>

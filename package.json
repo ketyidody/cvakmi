@@ -21,6 +21,8 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "bysquare": "^4.0.0",
+        "qrcode": "^1.5.4",
         "vue-images-grid": "^0.1.4",
         "vuedraggable": "^4.1.0"
     }

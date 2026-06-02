@@ -139,15 +139,13 @@ class Order extends Model
     }
 
     /**
-     * Generate a sequential, human-readable order number like OBJ-2026-0001.
+     * Build the human-readable order number for this row in the form
+     * YYMMDDOOOO — submission date (2-digit year) concatenated with the
+     * order's primary key zero-padded to four digits. Kept at 10 digits so
+     * it fits the PAY by square variable-symbol spec.
      */
-    public static function generateOrderNumber(): string
+    public function makeOrderNumber(): string
     {
-        $year = now()->year;
-        $count = static::whereYear('submitted_at', $year)
-            ->whereNotNull('order_number')
-            ->count();
-
-        return sprintf('OBJ-%d-%04d', $year, $count + 1);
+        return now()->format('ymd').sprintf('%04d', $this->id);
     }
 }

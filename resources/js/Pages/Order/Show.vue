@@ -1,9 +1,11 @@
 <script setup>
 import WizardLayout from '@/Layouts/WizardLayout.vue';
+import PaymentDetails from '@/Components/PaymentDetails.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
     order: Object,
+    payment: Object,
 });
 
 const formatPrice = (p) => new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' }).format(p ?? 0);
@@ -71,6 +73,8 @@ const statusLabels = {
                     <span>{{ formatPrice(order.total_estimate) }}</span>
                 </div>
             </div>
+
+            <PaymentDetails :payment="payment" />
         </div>
     </WizardLayout>
 </template>

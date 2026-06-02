@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PricingTypeController;
 use App\Http\Controllers\Admin\PrintOptionController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\OrderController;
@@ -121,6 +122,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('packages', PackageController::class)->except('show');
     Route::resource('orders', AdminOrderController::class)
         ->only(['index', 'show', 'update', 'destroy']);
+
+    Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 // Parent-facing wizard. One order can span multiple classrooms; one package
