@@ -98,7 +98,7 @@ const submit = () => form.post(route('order.submit'));
                     <div class="flex justify-between"><span>Balíky</span><span>{{ formatPrice(totals.packages) }}</span></div>
                     <div class="flex justify-between"><span>Fotografie navyše</span><span>{{ formatPrice(totals.extras) }}</span></div>
                     <div class="flex justify-between text-lg font-semibold border-t pt-2 mt-2">
-                        <span>Spolu (odhad)</span>
+                        <span>Spolu</span>
                         <span>{{ formatPrice(totals.total) }}</span>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ const submit = () => form.post(route('order.submit'));
                     <InputError :message="form.errors.selections" />
 
                     <p class="text-sm text-gray-500">
-                        Objednávka je nezáväzná – platbu a vyzdvihnutie dohodneme osobne.
+                        Odoslaním objednávky súhlasíte s výrobou vami zvolených fotografií v požadovaných rozmeroch. Fotografie budú vyhotovené bez vodoznaku. V nasledujúcom kroku môžete uskutočniť platbu pomocou QR kódu, alebo bankovým prevodom na účet (je potrebné uviesť číslo objednávky) alebo priniesť hotovosť do škôlky.
                     </p>
 
                     <div class="flex justify-end">
