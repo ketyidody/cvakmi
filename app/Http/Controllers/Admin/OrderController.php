@@ -92,6 +92,7 @@ class OrderController extends Controller
                 'id' => $order->id,
                 'order_number' => $order->order_number,
                 'status' => $order->status,
+                'paid' => (bool) $order->paid,
                 'note' => $order->note,
                 'submitted_at' => $order->submitted_at,
                 'total_estimate' => (float) $order->total_estimate,
@@ -107,12 +108,13 @@ class OrderController extends Controller
         abort_if($order->status === Order::STATUS_CART, 404);
 
         $validated = $request->validate([
-            'status' => ['required', Rule::in(Order::STATUSES)],
+            'status' => ['sometimes', 'required', Rule::in(Order::STATUSES)],
+            'paid' => ['sometimes', 'boolean'],
         ]);
 
         $order->update($validated);
 
-        return back()->with('success', 'Order status updated.');
+        return back()->with('success', 'Order updated.');
     }
 
     public function destroy(Order $order)

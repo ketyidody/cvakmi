@@ -29,12 +29,14 @@ class Order extends Model
         'user_id',
         'order_number',
         'status',
+        'paid',
         'note',
         'total_estimate',
         'submitted_at',
     ];
 
     protected $casts = [
+        'paid' => 'boolean',
         'total_estimate' => 'decimal:2',
         'submitted_at' => 'datetime',
     ];
