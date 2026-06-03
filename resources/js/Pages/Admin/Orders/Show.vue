@@ -9,6 +9,7 @@ const props = defineProps({
 });
 
 const form = useForm({ status: props.order.status });
+const paidForm = useForm({ paid: props.order.paid });
 
 const formatPrice = (p) => new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' }).format(p ?? 0);
 const formatDate = (d) => d ? new Date(d).toLocaleString('sk-SK') : '';
@@ -18,6 +19,7 @@ const thumb = (item) => item.classroom_photo_id
     : null;
 
 const updateStatus = () => form.patch(route('admin.orders.update', props.order.id), { preserveScroll: true });
+const togglePaid = () => paidForm.patch(route('admin.orders.update', props.order.id), { preserveScroll: true });
 </script>
 
 <template>
@@ -51,6 +53,39 @@ const updateStatus = () => form.patch(route('admin.orders.update', props.order.i
                             </select>
                             <PrimaryButton :disabled="form.processing">Update</PrimaryButton>
                         </form>
+                        <div class="mt-4 flex items-center gap-3">
+                            <button
+                                type="button"
+                                role="switch"
+                                :aria-checked="paidForm.paid"
+                                :disabled="paidForm.processing"
+                                @click="paidForm.paid = !paidForm.paid; togglePaid()"
+                                :class="[
+                                    'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2',
+                                    paidForm.paid ? 'bg-emerald-500 focus:ring-emerald-500' : 'bg-gray-300 focus:ring-gray-400',
+                                    paidForm.processing ? 'opacity-50 cursor-not-allowed' : '',
+                                ]"
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    :class="[
+                                        'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                                        paidForm.paid ? 'translate-x-5' : 'translate-x-0',
+                                    ]"
+                                />
+                            </button>
+                            <span
+                                :class="[
+                                    'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide transition-colors',
+                                    paidForm.paid ? 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200' : 'bg-gray-100 text-gray-600 ring-1 ring-inset ring-gray-200',
+                                ]"
+                            >
+                                <svg v-if="paidForm.paid" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1 1 0 011.42-1.42L8.5 12.08l6.79-6.79a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                {{ paidForm.paid ? 'Paid' : 'Unpaid' }}
+                            </span>
+                        </div>
                         <p class="mt-4 text-lg font-semibold">Estimated total: {{ formatPrice(order.total_estimate) }}</p>
                     </div>
                 </div>

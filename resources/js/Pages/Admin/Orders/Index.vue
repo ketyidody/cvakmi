@@ -25,6 +25,15 @@ const filterByStatus = () => {
     router.get(route('admin.orders.index'), status.value ? { status: status.value } : {},
         { preserveState: true, replace: true });
 };
+
+const togglePaid = (order) => {
+    const next = !order.paid;
+    router.patch(route('admin.orders.update', order.id), { paid: next }, {
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => { order.paid = next; },
+    });
+};
 </script>
 
 <template>
@@ -59,6 +68,7 @@ const filterByStatus = () => {
                                 <th class="py-2">Items</th>
                                 <th class="py-2">Total</th>
                                 <th class="py-2">Status</th>
+                                <th class="py-2">Paid</th>
                                 <th class="py-2">Submitted</th>
                                 <th></th>
                             </tr>
@@ -73,6 +83,27 @@ const filterByStatus = () => {
                                 <td class="py-2">{{ formatPrice(order.total_estimate) }}</td>
                                 <td class="py-2">
                                     <span :class="['px-2 py-1 text-xs rounded', statusClasses[order.status]]">{{ order.status }}</span>
+                                </td>
+                                <td class="py-2">
+                                    <button
+                                        type="button"
+                                        role="switch"
+                                        :aria-checked="order.paid"
+                                        @click.stop="togglePaid(order)"
+                                        :class="[
+                                            'relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-1',
+                                            order.paid ? 'bg-emerald-500 focus:ring-emerald-500' : 'bg-gray-300 focus:ring-gray-400',
+                                        ]"
+                                        :title="order.paid ? 'Mark as unpaid' : 'Mark as paid'"
+                                    >
+                                        <span
+                                            aria-hidden="true"
+                                            :class="[
+                                                'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                                                order.paid ? 'translate-x-4' : 'translate-x-0',
+                                            ]"
+                                        />
+                                    </button>
                                 </td>
                                 <td class="py-2 text-gray-500">{{ formatDate(order.submitted_at) }}</td>
                                 <td class="py-2 text-right">
