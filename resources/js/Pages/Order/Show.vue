@@ -69,7 +69,7 @@ const statusLabels = {
             <div class="bg-white shadow-sm rounded-lg p-5 text-sm space-y-1">
                 <div class="flex justify-between"><span>Balíky</span><span>{{ formatPrice(order.packages_total) }}</span></div>
                 <div class="flex justify-between text-lg font-semibold border-t pt-2 mt-2">
-                    <span>Spolu (odhad)</span>
+                    <span>Spolu</span>
                     <span>{{ formatPrice(order.total_estimate) }}</span>
                 </div>
             </div>
