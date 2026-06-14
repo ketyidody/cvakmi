@@ -17,6 +17,7 @@ const form = useForm({
     email: props.setting.email ?? '',
     iban: props.setting.iban ?? '',
     watermark_text: props.setting.watermark_text ?? '',
+    orders_enabled: props.setting.orders_enabled ?? true,
 });
 
 const flash = computed(() => usePage().props.flash ?? {});
@@ -100,6 +101,24 @@ const submit = () => {
                                 v-model="form.watermark_text"
                             />
                             <InputError class="mt-2" :message="form.errors.watermark_text" />
+                        </div>
+
+                        <div class="mb-6 border-t pt-6">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input
+                                    id="orders_enabled"
+                                    type="checkbox"
+                                    v-model="form.orders_enabled"
+                                    class="mt-1 rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                />
+                                <span>
+                                    <span class="block text-sm font-medium text-gray-700">Ordering enabled</span>
+                                    <span class="block text-sm text-gray-500 mt-0.5">
+                                        When off, parents can still log in and browse photos but cannot select packages, add to cart, or submit orders.
+                                    </span>
+                                </span>
+                            </label>
+                            <InputError class="mt-2" :message="form.errors.orders_enabled" />
                         </div>
 
                         <div class="flex items-center gap-4">

@@ -1,5 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import StepIndicator from '@/Components/StepIndicator.vue';
 import logoBlack from '../../images/logo-black.png';
 
@@ -11,6 +12,8 @@ defineProps({
         default: null,
     },
 });
+
+const ordersEnabled = computed(() => usePage().props.order?.ordersEnabled ?? true);
 </script>
 
 <template>
@@ -32,6 +35,12 @@ defineProps({
         </header>
 
         <StepIndicator v-if="steps" :steps="steps" />
+
+        <div v-if="!ordersEnabled" class="bg-amber-50 border-b border-amber-200">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 text-sm font-medium text-amber-900">
+                Objednávanie je uzavreté.
+            </div>
+        </div>
 
         <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <slot />

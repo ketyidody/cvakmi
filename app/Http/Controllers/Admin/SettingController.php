@@ -24,6 +24,7 @@ class SettingController extends Controller
             'email' => 'nullable|email|max:255',
             'iban' => 'nullable|string|max:255',
             'watermark_text' => 'nullable|string|max:255',
+            'orders_enabled' => 'required|boolean',
         ]);
 
         Setting::current()->update($validated);
