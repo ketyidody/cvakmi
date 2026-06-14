@@ -2,7 +2,8 @@
 import WizardLayout from '@/Layouts/WizardLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps({
     groups: Array,
@@ -11,6 +12,8 @@ const props = defineProps({
     hasItems: Boolean,
     steps: Array,
 });
+
+const ordersEnabled = computed(() => usePage().props.order?.ordersEnabled ?? true);
 
 const formatPrice = (p) => new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' }).format(p ?? 0);
 
@@ -117,7 +120,7 @@ const submit = () => form.post(route('order.submit'));
                     </p>
 
                     <div class="flex justify-end">
-                        <PrimaryButton :disabled="form.processing">Odoslať objednávku</PrimaryButton>
+                        <PrimaryButton :disabled="form.processing || !ordersEnabled">Odoslať objednávku</PrimaryButton>
                     </div>
                 </form>
             </template>

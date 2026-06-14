@@ -8,6 +8,7 @@ use App\Models\ClassroomPhoto;
 use App\Models\Order;
 use App\Models\Package;
 use App\Models\PrintOption;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,11 +34,19 @@ class WizardController extends Controller
         $cart = $request->user()->currentCart();
         $cart->load('classroomPackages.classroom');
 
+        $parentClassrooms = $this->parentClassrooms($request->user());
+
         abort_if(
-            $this->parentClassrooms($request->user())->isEmpty(),
+            $parentClassrooms->isEmpty(),
             403,
             'Nie ste priradený k žiadnej triede.'
         );
+
+        // When ordering is closed parents can still browse photos, but the
+        // package step has no functional value — skip straight to the gallery.
+        if (! Setting::ordersEnabled()) {
+            return redirect()->route('order.photos', $parentClassrooms->first()->slug);
+        }
 
         $first = $this->selectedClassrooms($cart)->first();
         if (! $first) {
@@ -93,6 +102,15 @@ class WizardController extends Controller
      */
     public function savePackages(Request $request)
     {
+        // Ordering closed: parents can't select packages, just let them through
+        // to the first classroom's photos for browsing.
+        if (! Setting::ordersEnabled()) {
+            $first = $this->parentClassrooms($request->user())->first();
+            abort_if(! $first, 403, 'Nie ste priradený k žiadnej triede.');
+
+            return redirect()->route('order.photos', $first->slug);
+        }
+
         $validated = $request->validate([
             'selections' => 'required|array|min:1',
             'selections.*.classroom_id' => 'required|integer|exists:classrooms,id',
@@ -162,8 +180,9 @@ class WizardController extends Controller
             'items.photo',
         ]);
 
+        $ordersEnabled = Setting::ordersEnabled();
         $myPackage = $cart->classroomPackages->firstWhere('classroom_id', $classroom->id);
-        if (! $myPackage) {
+        if (! $myPackage && $ordersEnabled) {
             // No package picked for this class — bounce back to the package step.
             return redirect()->route('order.package');
         }
@@ -185,7 +204,7 @@ class WizardController extends Controller
             ->groupBy('print_option_id')
             ->map(fn ($items) => (int) $items->sum('included_count'));
 
-        $allowanceRows = collect($myPackage->package?->allowanceMap() ?? [])
+        $allowanceRows = collect($myPackage?->package?->allowanceMap() ?? [])
             ->map(function ($qty, $printOptionId) use ($usedByOption, $printOptions) {
                 $opt = $printOptions->firstWhere('id', $printOptionId);
 
@@ -212,14 +231,18 @@ class WizardController extends Controller
                 'unit_price' => (float) ($i->printOption?->price ?? $i->unit_price),
             ])->values());
 
-        $selectedClasses = $this->selectedClassrooms($cart);
-        $idx = $selectedClasses->search(fn ($c) => $c->id === $classroom->id);
-        $prev = $idx > 0 ? $selectedClasses[$idx - 1] : null;
-        $next = $idx < $selectedClasses->count() - 1 ? $selectedClasses[$idx + 1] : null;
+        // When ordering is closed there are no per-classroom selections, so use
+        // the parent's full classroom list for prev/next navigation instead.
+        $navClasses = $ordersEnabled
+            ? $this->selectedClassrooms($cart)
+            : $this->parentClassrooms($request->user());
+        $idx = $navClasses->search(fn ($c) => $c->id === $classroom->id);
+        $prev = $idx > 0 ? $navClasses[$idx - 1] : null;
+        $next = $idx !== false && $idx < $navClasses->count() - 1 ? $navClasses[$idx + 1] : null;
 
         return Inertia::render('Order/Wizard/Photos', [
             'classroom' => $classroom->only(['id', 'name', 'slug', 'description']),
-            'package' => $myPackage->package ? [
+            'package' => $myPackage?->package ? [
                 'id' => $myPackage->package->id,
                 'name' => $myPackage->package->name,
                 'description' => $myPackage->package->description,
@@ -253,7 +276,7 @@ class WizardController extends Controller
             'classroomPackages.classroom',
         ]);
 
-        if ($this->selectedClassrooms($cart)->isEmpty()) {
+        if (Setting::ordersEnabled() && $this->selectedClassrooms($cart)->isEmpty()) {
             return redirect()->route('order.package');
         }
 
@@ -318,6 +341,8 @@ class WizardController extends Controller
 
     public function submit(Request $request)
     {
+        abort_unless(Setting::ordersEnabled(), 403, 'Objednávky sú momentálne uzavreté.');
+
         $validated = $request->validate([
             'note' => 'nullable|string|max:2000',
         ]);
@@ -380,7 +405,14 @@ class WizardController extends Controller
             'label' => 'Balíky',
             'url' => route('order.package'),
         ]];
-        foreach ($this->selectedClassrooms($cart) as $c) {
+
+        // When ordering is closed there is no package selection, so list every
+        // classroom the parent belongs to as a navigable browsing step.
+        $classroomsForSteps = Setting::ordersEnabled()
+            ? $this->selectedClassrooms($cart)
+            : $this->parentClassrooms($user);
+
+        foreach ($classroomsForSteps as $c) {
             $steps[] = [
                 'key' => 'photos:'.$c->slug,
                 'label' => $c->name,

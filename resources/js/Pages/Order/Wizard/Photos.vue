@@ -1,7 +1,9 @@
 <script setup>
 import WizardLayout from '@/Layouts/WizardLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
+
+const ordersEnabled = computed(() => usePage().props.order?.ordersEnabled ?? true);
 
 const props = defineProps({
     classroom: Object,
@@ -36,6 +38,7 @@ const pickedTotal = (photoId) => pickedFor(photoId).reduce((sum, s) => sum + s.q
 const allowanceFull = (row) => row.allowance > 0 && row.used >= row.allowance;
 
 const addToCart = (photo) => {
+    if (!ordersEnabled.value) return;
     const sel = working[photo.id];
     if (!sel.print_option_id) return;
     adding.value = photo.id;
@@ -197,8 +200,11 @@ const backLabel = computed(() =>
                                 <input type="number" min="1" max="99" v-model.number="working[photo.id].quantity"
                                     class="block w-full text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
                             </div>
-                            <button @click="addToCart(photo)" :disabled="adding === photo.id"
-                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded-md disabled:opacity-50">
+                            <button @click="addToCart(photo)" :disabled="adding === photo.id || !ordersEnabled"
+                                :class="['flex-1 text-white text-sm py-2 rounded-md',
+                                    ordersEnabled
+                                        ? 'bg-blue-600 hover:bg-blue-700 disabled:opacity-50'
+                                        : 'bg-gray-400 cursor-not-allowed']">
                                 {{ adding === photo.id ? 'Pridávam…' : 'Pridať' }}
                             </button>
                         </div>

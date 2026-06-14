@@ -2,7 +2,7 @@
 import WizardLayout from '@/Layouts/WizardLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { computed, reactive } from 'vue';
 
 const props = defineProps({
@@ -12,6 +12,8 @@ const props = defineProps({
     packages: Array,
     steps: Array,
 });
+
+const ordersEnabled = computed(() => usePage().props.order?.ordersEnabled ?? true);
 
 const formatPrice = (p) => new Intl.NumberFormat('sk-SK', { style: 'currency', currency: 'EUR' }).format(p ?? 0);
 
@@ -23,6 +25,7 @@ props.classrooms.forEach((c) => {
 });
 
 const setChoice = (classroomId, packageId) => {
+    if (!ordersEnabled.value) return;
     choices[classroomId] = packageId;
 };
 
@@ -72,7 +75,9 @@ const submit = () => {
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <button v-for="pkg in packages" :key="pkg.id" type="button"
                             @click="setChoice(classroom.id, pkg.id)"
-                            :class="['text-left bg-white border rounded-lg p-5 hover:shadow transition focus:outline-none',
+                            :disabled="!ordersEnabled"
+                            :class="['text-left bg-white border rounded-lg p-5 transition focus:outline-none',
+                                ordersEnabled ? 'hover:shadow cursor-pointer' : 'cursor-not-allowed opacity-60',
                                 choices[classroom.id] === pkg.id ? 'border-blue-600 ring-2 ring-blue-200' : 'border-gray-200']">
                             <div class="flex justify-between items-baseline">
                                 <span class="font-semibold">{{ pkg.name }}</span>
@@ -89,7 +94,9 @@ const submit = () => {
                         <!-- Skip option: only meaningful when the parent has multiple classes. -->
                         <button v-if="classrooms.length > 1" type="button"
                             @click="setChoice(classroom.id, null)"
-                            :class="['text-left bg-white border rounded-lg p-5 hover:shadow transition focus:outline-none',
+                            :disabled="!ordersEnabled"
+                            :class="['text-left bg-white border rounded-lg p-5 transition focus:outline-none',
+                                ordersEnabled ? 'hover:shadow cursor-pointer' : 'cursor-not-allowed opacity-60',
                                 choices[classroom.id] === null ? 'border-gray-500 ring-2 ring-gray-300' : 'border-dashed border-gray-300']">
                             <span class="font-semibold text-gray-700">Tentokrát preskočiť</span>
                             <p class="text-sm text-gray-500 mt-1">
@@ -102,7 +109,7 @@ const submit = () => {
                 <InputError :message="form.errors.selections" />
 
                 <div class="flex justify-end">
-                    <PrimaryButton :disabled="form.processing || !anySelected">
+                    <PrimaryButton :disabled="form.processing || (ordersEnabled && !anySelected)">
                         Pokračovať
                     </PrimaryButton>
                 </div>

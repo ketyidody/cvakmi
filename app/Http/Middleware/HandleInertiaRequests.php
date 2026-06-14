@@ -48,6 +48,7 @@ class HandleInertiaRequests extends Middleware
                         $user->orders()->where('status', \App\Models\Order::STATUS_CART)->pluck('id')
                     )->count()
                     : 0,
+                'ordersEnabled' => fn () => \App\Models\Setting::ordersEnabled(),
             ],
         ];
     }

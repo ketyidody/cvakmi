@@ -7,6 +7,7 @@ use App\Models\ClassroomPhoto;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PrintOption;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 /**
@@ -20,6 +21,8 @@ class CartController extends Controller
 
     public function addItem(Request $request)
     {
+        abort_unless(Setting::ordersEnabled(), 403, 'Objednávky sú momentálne uzavreté.');
+
         $validated = $request->validate([
             'classroom_photo_id' => 'required|exists:classroom_photos,id',
             'print_option_id' => 'required|exists:print_options,id',
